@@ -1,0 +1,296 @@
+INSTRUÇÕES DE CONFIGURAÇÃO - Projeto CRUD
+
+Este documento explica como configurar e executar o sistema CRUD localmente, e hospedar o frontend na Vercel. O projeto usa Node.js, Express, PostgreSQL (backend) e Next.js com Tailwind CSS (frontend).
+
+
+
+
+
+PRÉ-REQUISITOS
+
+
+
+
+
+Instale o Node.js: https://nodejs.org/
+
+
+
+Instale o PostgreSQL: https://www.postgresql.org/download/
+
+
+
+Instale o pgAdmin: https://www.pgadmin.org/
+
+
+
+Crie uma conta na Vercel: https://vercel.com/
+
+
+
+Instale a Vercel CLI: npm install -g vercel
+
+
+
+
+
+CONFIGURAR O BANCO DE DADOS a) Abra o pgAdmin e conecte-se ao servidor PostgreSQL (localhost:5432). b) Crie o banco de dados:
+
+
+
+
+
+Clique com o botão direito em "Databases" > Create > Database.
+
+
+
+Nomeie como "sistema_crud" e clique em Save. c) Crie a tabela:
+
+
+
+Expanda "sistema_crud" > Schemas > public > Tables.
+
+
+
+Clique com o botão direito em Tables > Create > Table.
+
+
+
+Nomeie como "clientes" e adicione os campos:
+
+
+
+
+
+id: serial, Primary Key
+
+
+
+nome: varchar(100)
+
+
+
+email: varchar(100)
+
+
+
+cpf: varchar(14), Unique
+
+
+
+telefone: varchar(20)
+
+
+
+Clique em Save. d) Alternativa via SQL:
+
+
+
+No pgAdmin, clique em Tools > Query Tool.
+
+
+
+Cole o conteúdo do arquivo database.sql e execute.
+
+
+
+Selecione o banco "sistema_crud" no menu suspenso antes de executar a criação da tabela.
+
+
+
+CONFIGURAR O BACKEND (LOCALMENTE) a) Navegue até a pasta backend:
+
+cd Projeto-crud/backend
+
+b) Instale as dependências:
+
+npm install
+
+c) Configure as credenciais do banco:
+
+
+
+
+
+Abra o arquivo .env e ajuste as variáveis:
+
+DB_HOST=localhost
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+DB_DATABASE=sistema_crud
+DB_PORT=5432
+PORT=3000
+
+d) Inicie o servidor:
+
+npm start
+
+
+
+
+
+CONFIGURAR O FRONTEND (LOCALMENTE) a) Navegue até a pasta frontend:
+
+cd Projeto-crud/frontend
+
+b) Instale as dependências:
+
+npm install
+
+c) Configure a URL da API:
+
+
+
+
+
+Abra o arquivo .env.local:
+
+NEXT_PUBLIC_API_URL=http://localhost:3000/clientes
+
+d) Inicie o servidor de desenvolvimento:
+
+npm run dev
+
+
+
+
+
+Acesse http://localhost:3000/clientes
+
+
+
+
+
+HOSPEDAR O FRONTEND NA VERCEL a) Crie um repositório Git para a pasta frontend:
+
+
+
+
+
+Inicialize o git: git init
+
+
+
+Adicione os arquivos: git add .
+
+
+
+Faça o commit: git commit -m "Initial commit"
+
+
+
+Crie um repositório no GitHub e faça o push. b) Conecte o repositório à Vercel:
+
+
+
+Faça login na Vercel: vercel login
+
+
+
+Execute: vercel
+
+
+
+Siga as instruções para vincular ao repositório. c) Configure a variável de ambiente na Vercel:
+
+
+
+No painel da Vercel, vá para Settings > Environment Variables.
+
+
+
+Adicione: NEXT_PUBLIC_API_URL com o valor da URL do backend hospedado (veja abaixo). d) Acesse a URL fornecida pela Vercel após o deploy.
+
+
+
+HOSPEDAR O BACKEND
+
+
+
+
+
+Opção 1: Hospedar em uma plataforma como Render ou Railway:
+
+
+
+
+
+Crie um repositório Git para a pasta backend.
+
+
+
+Siga as instruções da plataforma para deploy.
+
+
+
+Configure as variáveis de ambiente (.env) no painel da plataforma.
+
+
+
+Use um banco PostgreSQL hospedado (ex.: Supabase, Neon).
+
+
+
+Opção 2: Manter localmente para testes.
+
+
+
+Atualize o .env.local do frontend com a URL do backend hospedado.
+
+
+
+
+
+TESTAR O SISTEMA
+
+
+
+
+
+Acesse a URL do frontend (local ou Vercel).
+
+
+
+Cadastre, edite e exclua clientes.
+
+
+
+Teste CPFs duplicados e campos inválidos.
+
+
+
+Verifique mensagens de erro/sucesso.
+
+
+
+
+
+CRIAR O ARQUIVO ZIP
+
+
+
+
+
+Compacte a pasta Projeto-crud em Projeto-crud.zip.
+
+
+
+
+
+SOLUÇÃO DE PROBLEMAS
+
+
+
+
+
+Erro de conexão com o banco: Verifique o .env e o PostgreSQL.
+
+
+
+Erros de validação: Confirme os formatos (ex.: CPF 000.000.000-00).
+
+
+
+Frontend não carrega: Verifique o .env.local e a URL da API.
+
+Consulte INSTRUCOES_ALTERACOES.txt para personalizações ou README.md para visão geral.
