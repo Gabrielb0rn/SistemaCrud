@@ -22,21 +22,38 @@ exports.getById = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const cliente = req.body;
-  const erro = validarCliente(cliente);
-  if (erro) return res.status(400).json({ erro });
+  const clientes = Array.isArray(req.body) ? req.body : [req.body];
+  const inseridos = [];
 
   try {
-    const { rows: existing } = await pool.query('SELECT * FROM clientes WHERE cpf = $1', [cliente.cpf]);
-    if (existing.length > 0) return res.status(400).json({ erro: 'CPF já cadastrado' });
+    for (const cliente of clientes) {
+      const erro = validarCliente(cliente);
+      if (erro) return res.status(400).json({ erro });
 
-    const sql = 'INSERT INTO clientes (nome, email, cpf, telefone) VALUES ($1, $2, $3, $4) RETURNING *';
-    const { rows } = await pool.query(sql, [cliente.nome, cliente.email, cliente.cpf, cliente.telefone]);
-    res.status(201).json({ mensagem: 'Cliente cadastrado com sucesso', cliente: rows[0] });
+      const { rows: existing } = await pool.query(
+        'SELECT * FROM clientes WHERE cpf = $1',
+        [cliente.cpf]
+      );
+      if (existing.length > 0)
+        return res.status(400).json({ erro: `CPF ${cliente.cpf} já cadastrado` });
+
+      const sql = 'INSERT INTO clientes (nome, email, cpf, telefone) VALUES ($1, $2, $3, $4) RETURNING *';
+      const { rows } = await pool.query(sql, [
+        cliente.nome,
+        cliente.email,
+        cliente.cpf,
+        cliente.telefone,
+      ]);
+      inseridos.push(rows[0]);
+    }
+
+    res.status(201).json({ mensagem: 'Clientes cadastrados com sucesso', clientes: inseridos });
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao inserir cliente' });
+    console.error(err);
+    res.status(500).json({ erro: 'Erro ao inserir cliente(s)' });
   }
 };
+
 
 exports.update = async (req, res) => {
   const { id } = req.params;
