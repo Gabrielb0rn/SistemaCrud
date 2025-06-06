@@ -153,3 +153,44 @@ Veja INSTRUCOES_ALTERACOES.txt.
 Compactação
 
 Compacte a pasta Projeto-crud em Projeto-crud.zip.
+
+exemplo para post:
+
+[
+    {
+        "id": 1,
+        "nome": "Gab",
+        "email": "gab@gmail.com",
+        "cpf": "123.123.123-12",
+        "telefone": "00123456799"
+    },
+    {
+        "id": 2,
+        "nome": "Gab1",
+        "email": "gab1@gmail.com",
+        "cpf": "223.123.123-12",
+        "telefone":"10123456799"
+    },
+    {
+        "id": 3,
+        "nome": "Gab2",
+        "email": "gab2@gmail.com",
+        "cpf": "323.123.123-12",
+        "telefone": "20123456799"
+    },
+    {
+        "id": 4,
+        "nome": "Gab3",
+        "email": "gab3@gmail.com",
+        "cpf": "423.123.123-12",
+        "telefone": "30123456799"
+    },
+    {
+        "id": 5,
+        "nome": "Gab4",
+        "email": "gab4@gmail.com",
+        "cpf": "523.123.123-12",
+        "telefone": "40123456799"
+    }
+
+]
