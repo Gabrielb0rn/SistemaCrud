@@ -1,0 +1,19 @@
+GET 
+
+http://localhost:3000/clientes
+
+
+
+Post 
+
+http://localhost:3000/clientes
+
+{
+    "id": 1,
+    "nome": "Nome",
+    "email": "nome@gmail.com",
+    "cpf": "123.123.123-12",
+    "telefone": "00123456799"
+  }
+
+  
