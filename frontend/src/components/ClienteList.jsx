@@ -5,10 +5,10 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/clientes';
 
 export default function ClienteList({ clientes, setEditCliente, carregarClientes, mostrarMensagem }) {
-  const deletarCliente = async (id) => {
+  const deletarCliente = async (cpf) => {
     if (window.confirm('Deseja excluir este cliente?')) {
       try {
-        const res = await fetch(`${API_URL}/${id}`, {
+        const res = await fetch(`${API_URL}/${cpf}`, {
           method: 'DELETE',
         });
         const data = await res.json();
@@ -30,17 +30,19 @@ export default function ClienteList({ clientes, setEditCliente, carregarClientes
             <th className="p-3 text-left">Nome</th>
             <th className="p-3 text-left">Email</th>
             <th className="p-3 text-left">CPF</th>
-            <th className="p-3 text-left">Telefone</th>
+            <th className="p-3 text-left">Idade</th>
+            <th className="p-3 text-left">Profissão</th>
             <th className="p-3 text-left">Ações</th>
           </tr>
         </thead>
         <tbody>
           {clientes.map((cliente) => (
-            <tr key={cliente.id} className="border-t">
+            <tr key={cliente.cpf} className="border-t">
               <td className="p-3">{cliente.nome}</td>
               <td className="p-3">{cliente.email}</td>
               <td className="p-3">{cliente.cpf}</td>
-              <td className="p-3">{cliente.telefone}</td>
+              <td className="p-3">{cliente.idade}</td>
+              <td className="p-3">{cliente.profissao}</td>
               <td className="p-3">
                 <button
                   onClick={() => setEditCliente(cliente)}
@@ -49,7 +51,7 @@ export default function ClienteList({ clientes, setEditCliente, carregarClientes
                   <FaEdit />
                 </button>
                 <button
-                  onClick={() => deletarCliente(cliente.id)}
+                  onClick={() => deletarCliente(cliente.cpf)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <FaTrash />
