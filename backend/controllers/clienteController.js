@@ -3,7 +3,7 @@ const { validarCliente } = require('../validators/clienteValidator');
 
 exports.getAll = async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM clientes');
+    const { rows } = await pool.query('SELECT * FROM client');
     res.json(rows);
   } catch (err) {
     res.status(500).json({ erro: 'Erro no servidor' });
@@ -11,9 +11,9 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const { id } = req.params;
+  const { cpf } = req.params;
   try {
-    const { rows } = await pool.query('SELECT * FROM clientes WHERE id = $1', [id]);
+    const { rows } = await pool.query('SELECT * FROM client WHERE cpf = $1', [cpf]);
     if (rows.length === 0) return res.status(404).json({ erro: 'Cliente não encontrado' });
     res.json(rows[0]);
   } catch (err) {
@@ -31,18 +31,19 @@ exports.create = async (req, res) => {
       if (erro) return res.status(400).json({ erro });
 
       const { rows: existing } = await pool.query(
-        'SELECT * FROM clientes WHERE cpf = $1',
+        'SELECT * FROM client WHERE cpf = $1',
         [cliente.cpf]
       );
       if (existing.length > 0)
         return res.status(400).json({ erro: `CPF ${cliente.cpf} já cadastrado` });
 
-      const sql = 'INSERT INTO clientes (nome, email, cpf, telefone) VALUES ($1, $2, $3, $4) RETURNING *';
+      const sql = 'INSERT INTO client (cpf, nome, email, idade, profissao) VALUES ($1, $2, $3, $4, $5) RETURNING *';
       const { rows } = await pool.query(sql, [
+        cliente.cpf,
         cliente.nome,
         cliente.email,
-        cliente.cpf,
-        cliente.telefone,
+        cliente.idade,
+        cliente.profissao
       ]);
       inseridos.push(rows[0]);
     }
@@ -54,19 +55,18 @@ exports.create = async (req, res) => {
   }
 };
 
-
 exports.update = async (req, res) => {
-  const { id } = req.params;
+  const { cpf } = req.params;
   const cliente = req.body;
   const erro = validarCliente(cliente);
   if (erro) return res.status(400).json({ erro });
 
   try {
-    const { rows: existing } = await pool.query('SELECT * FROM clientes WHERE cpf = $1 AND id != $2', [cliente.cpf, id]);
+    const { rows: existing } = await pool.query('SELECT * FROM client WHERE cpf = $1 AND cpf != $2', [cliente.cpf, cpf]);
     if (existing.length > 0) return res.status(400).json({ erro: 'CPF já cadastrado' });
 
-    const sql = 'UPDATE clientes SET nome = $1, email = $2, cpf = $3, telefone = $4 WHERE id = $5 RETURNING *';
-    const { rows } = await pool.query(sql, [cliente.nome, cliente.email, cliente.cpf, cliente.telefone, id]);
+    const sql = 'UPDATE client SET nome = $1, email = $2, idade = $3, profissao = $4 WHERE cpf = $5 RETURNING *';
+    const { rows } = await pool.query(sql, [cliente.nome, cliente.email, cliente.idade, cliente.profissao, cpf]);
     if (rows.length === 0) return res.status(404).json({ erro: 'Cliente não encontrado' });
     res.json({ mensagem: 'Cliente atualizado com sucesso', cliente: rows[0] });
   } catch (err) {
@@ -75,9 +75,9 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-  const { id } = req.params;
+  const { cpf } = req.params;
   try {
-    const { rowCount } = await pool.query('DELETE FROM clientes WHERE id = $1', [id]);
+    const { rowCount } = await pool.query('DELETE FROM client WHERE cpf = $1', [cpf]);
     if (rowCount === 0) return res.status(404).json({ erro: 'Cliente não encontrado' });
     res.json({ mensagem: 'Cliente excluído com sucesso' });
   } catch (err) {
